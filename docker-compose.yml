@@ -1,0 +1,82 @@
+version: '2.1'
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.2
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - 9200:9200
+    expose:
+      - "9200"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - stack
+    # deploy:
+    #   replicas: 1
+    #   restart_policy:
+    #     condition: on-failure
+    #   resources:
+    #     limits:
+    #       # cpus: "0.1"
+    #       memory: 1000M
+    #   update_config:
+    #     parallelism: 1
+    #     delay: 10s
+    #     order: stop-first
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.2.2
+    ports:
+      - 5601:5601
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5601"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      elasticsearch: { condition: service_healthy }
+    networks:
+      - stack
+    # deploy:
+    #   replicas: 1
+    #   restart_policy:
+    #     condition: on-failure
+    #   resources:
+    #     limits:
+    #       # cpus: "0.1"
+    #       memory: 500M
+    #   update_config:
+    #     parallelism: 1
+    #     delay: 10s
+    #     order: stop-first
+  apm-server:
+    image: docker.elastic.co/apm/apm-server:6.2.4
+    ports:
+      - 8200:8200
+    depends_on:
+      elasticsearch: { condition: service_healthy }
+      kibana: { condition: service_healthy }
+    volumes:
+      - ./apm-server.yml:/usr/share/apm-server/apm-server.yml
+    networks:
+      - stack
+    # deploy:
+    #   replicas: 1
+    #   restart_policy:
+    #     condition: on-failure
+    #   resources:
+    #     limits:
+    #       # cpus: "0.1"
+    #       memory: 250M
+    #   update_config:
+    #     parallelism: 1
+    #     delay: 10s
+    #     order: stop-first
+
+networks:
+  stack:
+    driver: bridge

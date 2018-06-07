@@ -1,0 +1,62 @@
+{
+    "AWSEBDockerrunVersion": 2,
+    "containerDefinitions": [
+        {
+            "essential": true,
+            "image": "docker.elastic.co/apm/apm-server:6.2.4",
+            "memory": 250,
+            "mountPoints": [
+                {
+                    "containerPath": "/usr/share/apm-server/apm-server.yml",
+                    "sourceVolume": "_Apm-ServerApm-Server_Yml"
+                }
+            ],
+            "name": "apm-server",
+            "portMappings": [
+                {
+                    "containerPort": 8200,
+                    "hostPort": 8200
+                }
+            ]
+        },
+        {
+            "environment": [
+                {
+                    "name": "ES_JAVA_OPTS",
+                    "value": "-Xms512m -Xmx512m"
+                }
+            ],
+            "essential": true,
+            "image": "docker.elastic.co/elasticsearch/elasticsearch:6.2.2",
+            "memory": 1000,
+            "name": "elasticsearch",
+            "portMappings": [
+                {
+                    "containerPort": 9200,
+                    "hostPort": 9200
+                }
+            ]
+        },
+        {
+            "essential": true,
+            "image": "docker.elastic.co/kibana/kibana:6.2.2",
+            "memory": 500,
+            "name": "kibana",
+            "portMappings": [
+                {
+                    "containerPort": 5601,
+                    "hostPort": 5601
+                }
+            ]
+        }
+    ],
+    "family": "",
+    "volumes": [
+        {
+            "host": {
+                "sourcePath": "/var/app/current/apm-server.yml"
+            },
+            "name": "_Apm-ServerApm-Server_Yml"
+        }
+    ]
+}

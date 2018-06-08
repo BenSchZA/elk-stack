@@ -33,7 +33,7 @@ services:
   kibana:
     image: docker.elastic.co/kibana/kibana:6.2.2
     ports:
-      - 5601:5601
+      - 80:5601
     #healthcheck:
     #  test: ["CMD", "curl", "-f", "http://localhost:5601"]
     #  interval: 10s

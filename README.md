@@ -17,3 +17,9 @@ Current working directory where files are located /var/app/current/
 For ElasticSearch:
 
 sudo sysctl -w vm.max_map_count=262144
+
+To make this permanent:
+
+sudo echo 'vm.max_map_count=262144' >> /etc/sysctl.conf
+
+After this either restart server or use sysctl command to set.

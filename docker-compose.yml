@@ -30,6 +30,15 @@ services:
     #     parallelism: 1
     #     delay: 10s
     #     order: stop-first
+  elasticsearch_curator:
+    image: elasticsearch_curator:latest
+    build:
+      context: ./docker-elasticsearch-curator
+      dockerfile: Dockerfile
+    depends_on:
+      - elasticsearch
+    networks:
+      - stack
   kibana:
     image: docker.elastic.co/kibana/kibana:6.2.2
     ports:

@@ -1,0 +1,3 @@
+server.name: kibana
+server.host: "localhost"
+elasticsearch.url: "http://elasticsearch:9200"
